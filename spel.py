@@ -91,7 +91,7 @@ def dmgS(strbonus):
 
 #Items
 
-rostigt_svard = Items("Rostigt Svärd","Rostigt och trubbigt",True,6,rand.randint(2,5))
+rostigt_svard = Items("Rostigt Svärd","Rostigt och trubbigt",True,STRBONUS(1,4),rand.randint(2,5))
 
 
 stal_svard = Items("Svärd","Dammigt men fint skick, perfekt mot monster",True,STRBONUS(1,10),rand.randint(2,7))
@@ -176,7 +176,7 @@ while True:
     if antal > 0:
         if antal == 1:
             antal = "ett"
-        print(f"\nDet hörs något i {antal} av rummen...")
+        print(f"Det hörs något i {antal} av rummen...")
    
     d2 = False
     while d2 == False:
@@ -219,7 +219,7 @@ while True:
                     print(spelare.HP)
                     val = False
                     while val == False:
-                        drag = input("Öppna inv(i)\nSlå ditt slag mot besten(a)\n: ")
+                        drag = input("\nÖppna inv(i)\nSlå ditt slag mot besten(a)\n: ")
                         if drag == "a":
                             if len(spelare.INV) > 0:
                                 HPM = HPM - dmgS(spelare.INV[-1].STR_bonus)
@@ -227,6 +227,10 @@ while True:
                             else:
                                 HPM = HPM - dmgS(0)
                                 val = True
+                        if drag == "i":
+                            for value in spelare.INV:
+                                print(f'{value.namn} som har strength bonus {value.STR_bonus}', end=' ')
+                                input("\n")
                 if HPM <= 0:
                     monsterdead = True
                     monsterdeadchest = True
