@@ -82,12 +82,12 @@ def dmgIntM(dmg):
 def HPint():
     HP = rand.randint((spelare.HP - 3), spelare.HP + 3)
     return HP
-def dmgS():
-    if len(spelare.INV) > 0:
-        dmgS1 = ((spelare.STR-1, spelare.STR+1)) + (spelare.INV[-1].STR_bonus)
+def dmgS(strbonus):
+    if strbonus > 0:
+        dmgS = (rand.randint(spelare.STR-1, spelare.STR+1)) + (strbonus)
     else:
-        dmgS1 = rand.randint(spelare.STR -1, spelare.STR + 1)
-    return dmgS1
+        dmgS = rand.randint(spelare.STR -1, spelare.STR + 1)
+    return dmgS
 
 #Items
 
@@ -153,9 +153,9 @@ while True:
         a1 = monster_rum
     elif a1 > 14:
         antal += 1
-        a1 = katt_rum
+        a1 = monster_rum
     elif a1 <= 14:
-        a1 = tomt_rum
+        a1 = monster_rum
     if w1 > 16:
         antal += 1
         w1 = monster_rum
@@ -178,7 +178,6 @@ while True:
             antal = "ett"
         print(f"\nDet hörs något i {antal} av rummen...")
    
-    time.sleep(1.5)
     d2 = False
     while d2 == False:
         d = input("Vilket av de tre rum vill du utforska?(a/w/d): ")
@@ -217,14 +216,24 @@ while True:
                 print("Monstret rör sig mot dig med vapnet")
                 while HPM > 0:
                     print(HPM)
-                    HPM = HPM - dmgS()
+                    print(spelare.HP)
+                    val = False
+                    while val == False:
+                        drag = input("Öppna inv(i)\nSlå ditt slag mot besten(a)\n: ")
+                        if drag == "a":
+                            if len(spelare.INV) > 0:
+                                HPM = HPM - dmgS(spelare.INV[-1].STR_bonus)
+                                val = True
+                            else:
+                                HPM = HPM - dmgS(0)
+                                val = True
                 if HPM <= 0:
                     monsterdead = True
                     monsterdeadchest = True
 
         if monsterdeadchest == True:
             print("you have killed the monster")
-            spelare.XP += rand.randint(100000,10000000)
+            spelare.XP += rand.randint(10,25)
             print(f"{spelare.XP}/{spelare.get_next_level_xp()}XP")
             if spelare.XP >= spelare.get_next_level_xp():
                 spelare.level_up()
@@ -245,7 +254,5 @@ while True:
 
 
     time.sleep(2)
-    if len(spelare.INV) < 0:
-        print(spelare.INV[-1].STR_bonus)
     print("\n")
     spelare.RUM = mellanrum
