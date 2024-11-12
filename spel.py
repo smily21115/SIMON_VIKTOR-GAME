@@ -88,6 +88,24 @@ def dmgS(strbonus):
     else:
         dmgS = rand.randint(spelare.STR -1, spelare.STR + 1)
     return dmgS
+def vilketRum(awd):
+    if awd > 16:
+        awd = monster_rum
+    elif awd > 14:
+        awd = katt_rum
+    elif awd <= 14:
+        awd = tomt_rum
+    return awd
+def monkatan(a,b,c):
+    antal = 0
+    if a > 14:
+        antal += 1
+    if b > 14:
+        antal += 1
+    if c > 14:
+        antal += 1
+    return antal
+
 
 #Items
 
@@ -147,32 +165,14 @@ while True:
     print("")
     print(spelare.RUM.beskrivn)
     antal = 0
-    a1,w1,d1 = rand.randint(1,20),rand.randint(1,20),rand.randint(1,20)
-    if a1 > 16:
-        antal += 1
-        a1 = monster_rum
-    elif a1 > 14:
-        antal += 1
-        a1 = monster_rum
-    elif a1 <= 14:
-        a1 = monster_rum
-    if w1 > 16:
-        antal += 1
-        w1 = monster_rum
-    elif w1 > 14:
-        antal += 1
-        w1 = katt_rum
-    elif w1 <= 14:
-        w1 = tomt_rum
-    if d1 > 16:
-        antal += 1
-        d1 = monster_rum
-    elif d1 > 14:
-        antal += 1
-        d1 = katt_rum
-    elif d1 <= 14:
-        d1 = tomt_rum
-
+    a = rand.randint(1,20)
+    w = rand.randint(1,20)
+    d = rand.randint(1,20)
+    a1 = vilketRum(a)
+    w1 = vilketRum(w)
+    d1 = vilketRum(d)
+    antal = monkatan(a,w,d)
+    
     if antal > 0:
         if antal == 1:
             antal = "ett"
@@ -257,6 +257,6 @@ while True:
 
 
 
-    time.sleep(2)
+    time.sleep(1)
     print("\n")
     spelare.RUM = mellanrum
