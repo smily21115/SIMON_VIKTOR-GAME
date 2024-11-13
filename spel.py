@@ -218,7 +218,7 @@ while True:
                 spelare.HP -= 3
             elif enc == "a":      
                 print("Monstret rör sig mot dig med vapnet")
-                while HPM >= 0:
+                while HPM > 0:
                     print("\n-------------")
                     print(f'Monstrets hälsa är: {HPM}')
                     print(f'Din hälsa är: {spelare.HP}')
