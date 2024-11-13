@@ -218,7 +218,7 @@ while True:
                 spelare.HP -= 3
             elif enc == "a":      
                 print("Monstret rör sig mot dig med vapnet")
-                while HPM > 0:
+                while HPM >= 0:
                     print("\n-------------")
                     print(f'Monstrets hälsa är: {HPM}')
                     print(f'Din hälsa är: {spelare.HP}')
@@ -228,19 +228,25 @@ while True:
                         drag = input("\nÖppna inv(i)\nSlå ditt slag mot besten(a)\n: ")
                         if drag == "a":
                             if len(spelare.INV) > 0:
-                                HPM = HPM - dmgS(spelare.INV[-1].STR_bonus)
+                                dmgtomonster = dmgS(spelare.INV[-1].STR_bonus)
+                                HPM = HPM - dmgtomonster
                                 val = True
+                                print(f"Du slängde ditt vapen mot monstret och skadade det med {dmgtomonster}\n-------------")
                             else:
-                                HPM = HPM - dmgS(0)
+                                dmgtomonster = dmgS(0)
+                                HPM = HPM - dmgtomonster
                                 val = True
+                                print(f"Du slängde ditt hand mot monstret och skadade det med {dmgtomonster}\n-------------")
+                            time.sleep(1.2)
                         if drag == "i":
                             for value in spelare.INV:
                                 print(f'{value.namn} som har strength bonus {value.STR_bonus}', end=' ')
                                 input("\n")
-                    dmgtoplayer = dmgIntM()
-                    spelare.HP = spelare.HP - dmgtoplayer
-                    print(f"\nMonstret slänger vapnet mot dig och du förlorar {dmgtoplayer} hälsa")
-                    time.sleep(1.2)
+                    if HPM > 0:
+                        dmgtoplayer = dmgIntM()
+                        spelare.HP = spelare.HP - dmgtoplayer
+                        print(f"\nMonstret slänger vapnet mot dig och du förlorar {dmgtoplayer} hälsa")
+                        time.sleep(1.2)
                 if HPM <= 0:
                     monsterdead = True
                     monsterdeadchest = True
