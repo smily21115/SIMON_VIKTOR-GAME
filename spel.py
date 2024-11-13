@@ -10,7 +10,6 @@ class Player:
         self.RUM = RUM
         self.XP = XP
 
-
     def gain_xp(amount):
       spelare.XP += amount
       print(f"\nYou gained {amount} XP! Current XP: {spelare.XP}/{spelare.get_next_level_xp()}")
@@ -52,6 +51,7 @@ class Room:
         self.namn = namn
         self.beskrivn = beskrivn
         self.kista = kista
+        #self.trap = trap
 
 
 def STRBONUS(f1,f2):
@@ -61,12 +61,12 @@ def STRBONUS(f1,f2):
         bonus = 1
     return bonus
 def chestIn():
-    if rand.randint(1,11) <= 11:
+    if rand.randint(1,11) >= 10:
         return True
     else:
         return False
 def chestInMellan():
-    if rand.randint(1,50) >= 40:
+    if rand.randint(1,5) >= 4:
         return True
     else:
         return False
@@ -76,7 +76,9 @@ def chestItems(f3,f4):
         return rostigt_svard
     elif i == f4:
         return stal_svard
-def dmgIntM(dmg):
+#def trapIn():
+
+def dmgIntM():
     dmg = rand.randint((spelare.STR - 3), spelare.STR + 2)
     return dmg
 def HPint():
@@ -162,7 +164,7 @@ input("...")
 
 
 while True:
-    print("")
+    print("\n-------------\n")
     print(spelare.RUM.beskrivn)
     antal = 0
     a = rand.randint(1,20)
@@ -198,7 +200,9 @@ while True:
     print(spelare.RUM.beskrivn)
     monsterdeadchest = False
     time.sleep(1)
-    
+    if (d.kista == True) and (d != monster_rum):
+        print("Fungerar")
+
     if spelare.RUM == monster_rum:
         monsterdead = False
         monsterdeadchest = False
@@ -215,8 +219,10 @@ while True:
             elif enc == "a":      
                 print("Monstret rör sig mot dig med vapnet")
                 while HPM > 0:
-                    print(HPM)
-                    print(spelare.HP)
+                    print("\n-------------")
+                    print(f'Monstrets hälsa är: {HPM}')
+                    print(f'Din hälsa är: {spelare.HP}')
+                    print("\n-------------")
                     val = False
                     while val == False:
                         drag = input("\nÖppna inv(i)\nSlå ditt slag mot besten(a)\n: ")
@@ -231,10 +237,14 @@ while True:
                             for value in spelare.INV:
                                 print(f'{value.namn} som har strength bonus {value.STR_bonus}', end=' ')
                                 input("\n")
+                    dmgtoplayer = dmgIntM()
+                    spelare.HP = spelare.HP - dmgtoplayer
+                    print(f"\nMonstret slänger vapnet mot dig och du förlorar {dmgtoplayer} hälsa")
+                    time.sleep(1.2)
                 if HPM <= 0:
                     monsterdead = True
                     monsterdeadchest = True
-
+                    
         if monsterdeadchest == True:
             print("you have killed the monster")
             spelare.XP += rand.randint(10,25)
@@ -242,7 +252,6 @@ while True:
             if spelare.XP >= spelare.get_next_level_xp():
                 spelare.level_up()
                 print(f"You have leveld up to level {spelare.LVL}")
-            
 
  
                 
@@ -256,7 +265,14 @@ while True:
                 print(spelare.INV[-1].beskriv)
 
 
-
     time.sleep(1)
     print("\n")
     spelare.RUM = mellanrum
+    spelare.RUM.kista = chestInMellan()
+    if spelare.RUM.kista == True:
+        print("I mellanrummet är det en kista, vill du öppna den?(y/n: )")
+        if input() == "y":
+                d.kista = spelare.INV.append(chestItems(1,4))
+                c = spelare.INV[-1].namn
+                print(f"Du hittade...\nEtt {c}")
+                print(spelare.INV[-1].beskriv)
