@@ -61,12 +61,12 @@ def STRBONUS(f1,f2):
         bonus = 1
     return bonus
 def chestIn():
-    if rand.randint(1,11) >= 10:
+    if rand.randint(1,11) >= 9:
         return True
     else:
         return False
 def chestInMellan():
-    if rand.randint(1,5) >= 4:
+    if rand.randint(1,5) <= 4:
         return True
     else:
         return False
@@ -81,8 +81,8 @@ def chestItems(f3,f4):
 def dmgIntM():
     dmg = rand.randint((spelare.STR - 3), spelare.STR + 2)
     return dmg
-def HPint():
-    HP = rand.randint((spelare.HP - 3), spelare.HP + 3)
+def HPint(ran):
+    HP = ran
     return HP
 def dmgS(strbonus):
     if strbonus > 0:
@@ -111,7 +111,7 @@ def monkatan(a,b,c):
 
 #Items
 
-rostigt_svard = Items("Rostigt Svärd","Rostigt och trubbigt",True,STRBONUS(1,4),rand.randint(2,5))
+rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,STRBONUS(1,4),rand.randint(2,5))
 
 
 stal_svard = Items("Svärd","Dammigt men fint skick, perfekt mot monster",True,STRBONUS(1,10),rand.randint(2,7))
@@ -132,7 +132,7 @@ start_rum = Room("Start rum","","")
 monster_rum = Room("Monster rum", "Det är mörkt, men det hörs att något andas.\n Det blir tyst... \n Ett öga lyser upp rummet och du ser...\n  \nEtt monster, DÖDA DET!",chestIn())
 
 
-tomt_rum = Room("Tomt", "En fackla lyser upp rummet, men inget annat, tror jag", chestIn())
+tomt_rum = Room("Tomt", "En fackla lyser upp rummet, men inget annat", chestIn())
 
 
 katt_rum = Room("Katt Rum", "Det är mörkt, men det hörs att något andas.\n Det blir tyst... \nEtt öga lyser upp rummet och du ser...\n \nEn katt!",chestIn())
@@ -197,18 +197,30 @@ while True:
         
     
     spelare.RUM = d
+    d.kista = chestIn()
+    if (d == tomt_rum) and (d.kista == True):
+        d.beskrivn = "En fackla lyser upp rummet"
+    elif (d == tomt_rum) and (d.kista == False):
+        d.beskrivn = "En fackla lyser upp rummet, men inget annat"
     print(spelare.RUM.beskrivn)
     monsterdeadchest = False
     time.sleep(1)
-    if (d.kista == True) and (d != monster_rum):
-        print("Fungerar")
+    if (d.kista == True) and (d != monster_rum) and (d != katt_rum):
+        print("Under facklan ser du en kista")
+        print("Öppnar du den?(y/n): ")
+        if input() == "y":
+                d.kista = spelare.INV.append(chestItems(1,4))
+                c = spelare.INV[-1].namn
+                print(f"Du hittade...\nEtt {c}")
+           
+                print(spelare.INV[-1].beskriv)
 
     if spelare.RUM == monster_rum:
         monsterdead = False
         monsterdeadchest = False
         vap = chestItems(1,2).namn
         print(f"\nMonstret vrålar och tar fram ett {vap}")
-        HPM = HPint()
+        HPM = HPint(rand.randint((spelare.HP - 3), spelare.HP + 3))
         
         while monsterdead == False:
             print("Hur kommer du ta dig ann detta?\nSpringa iväg(-3HP, s),    ATTACK!(a)")
