@@ -17,8 +17,6 @@ class Player:
     def get_next_level_xp(spel):
         return 100 * spelare.LVL  
 
-
-
     def level_up(spal):
         spelare.LVL += 1
         spelare.HP += 10  
@@ -30,12 +28,10 @@ class Player:
             print("\nYou have reached level 10 and won the game! Congratulations!")
             exit()
 
-
 class Enemies:
     def __init__(self,MHP,MSTR):
         self.MHP = rand.randint(1,spelare.HP)
         self.MSTR = rand.randint(1,spelare.STR)
-
 
 class Items:
     def __init__(self,namn,beskriv,anvanda,STR_bonus,slitstyrk):
@@ -45,14 +41,12 @@ class Items:
         self.STR_bonus = STR_bonus
         self.slitstyrk = slitstyrk
 
-
 class Room:
     def __init__(self,namn,beskrivn,kista):
         self.namn = namn
         self.beskrivn = beskrivn
         self.kista = kista
         #self.trap = trap
-
 
 def STRBONUS(f1,f2):
     if rand.randint(1,10) >= 1:
@@ -111,16 +105,16 @@ def monkatan(a,b,c):
 
 #Items
 
-rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,STRBONUS(1,4),rand.randint(2,5))
+rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,5,rand.randint(2,5))
 
 
-stal_svard = Items("Svärd","Dammigt men fint skick, perfekt mot monster",True,STRBONUS(1,10),rand.randint(2,7))
+stal_svard = Items("Svärd","Dammigt men fint skick, perfekt mot monster",True,10,rand.randint(2,7))
 
 
-damascus_svard = Items("Unikt svärd","Svärd gjort av olika metaller som skapar ett fantastiskt mönster. Slitstyrkan är unikt",True,STRBONUS(1,15),rand.randint(5,10))
+damascus_svard = Items("Unikt svärd","Svärd gjort av olika metaller som skapar ett fantastiskt mönster. Slitstyrkan är unikt",True,20,rand.randint(5,10))
 
 
-hephaestus_svard = Items("Unikt svärd","Glänser som om den smeds i samma stund som du hittade den. Är detta Guds gåva?",True,STRBONUS(6,17),rand.randint(6,12))
+hephaestus_svard = Items("Unikt svärd","Glänser som om den smeds i samma stund som du hittade den. Är detta Guds gåva?",True,30,rand.randint(6,12))
 
 
 #Rum
@@ -151,17 +145,8 @@ spelare = Player(10,5,[],1,start_rum,0)
 #Enemies
 
 
-
-
-
-
 print("Du undrar kanske vart du är... \nTre rum väntar på dig, svaret till din fråga kan vara i ett av rummen...")
 input("...")
-
-
-
-
-
 
 while True:
     print("\n-------------\n")
@@ -181,22 +166,34 @@ while True:
         print(f"Det hörs något i {antal} av rummen...")
    
     d2 = False
-    while d2 == False:
-        d = input("Vilket av de tre rum vill du utforska?(a/w/d): ")
-        if d == "a":
-            d = a1
-            d2 = True
-        elif d == "w":
-            d = w1
-            d2 = True
-        elif d == "d":
-            d = d1
-            d2 = True
-        else:
-            print("Skriv in, a, w eller d")
-        
-    
+    d3 = False
+    while d3 == False:
+        invordoor = input("Vill du utforska ett rum eller kolla ditt inventory?(r/i): ")
+        if invordoor == "r":
+            while d2 == False:
+                d = input("Vilket av de tre rum vill du utforska?(a/w/d): ")
+                if d == "a":
+                    d = a1
+                    d2 = True
+                    d3 = True
+                elif d == "w":
+                    d = w1
+                    d2 = True
+                    d3 = True
+                elif d == "d":
+                    d = d1
+                    d2 = True
+                    d3 = True
+                else:
+                    print("Skriv in, a, w eller d")
+        if invordoor == "i":
+            for value in spelare.INV:
+                print("\n-------------")
+                print(f'{value.namn} som har strength bonus {value.STR_bonus}')
+                print("\n-------------")
+            input("")
     spelare.RUM = d
+
     d.kista = chestIn()
     if (d == tomt_rum) and (d.kista == True):
         d.beskrivn = "En fackla lyser upp rummet"
@@ -210,9 +207,9 @@ while True:
         print("Öppnar du den?(y/n): ")
         if input() == "y":
                 d.kista = spelare.INV.append(chestItems(1,4))
-                c = spelare.INV[-1].namn
-                print(f"Du hittade...\nEtt {c}")
-           
+                c = spelare.INV[-1]
+                print(f"Du hittade...\nEtt {c.namn}")
+                spelare.INV[-1].STR_bonus = STRBONUS(2, c.STR_bonus)
                 print(spelare.INV[-1].beskriv)
 
     if spelare.RUM == monster_rum:
@@ -277,9 +274,9 @@ while True:
             print("Du ser en kista där också, vill du öppna den?(y/n)")
             if input() == "y":
                 d.kista = spelare.INV.append(chestItems(1,4))
-                c = spelare.INV[-1].namn
-                print(f"Du hittade...\nEtt {c}")
-           
+                c = spelare.INV[-1]
+                print(f"Du hittade...\nEtt {c.namn}")
+                spelare.INV[-1].STR_bonus = STRBONUS(2, c.STR_bonus)
                 print(spelare.INV[-1].beskriv)
 
 
@@ -288,9 +285,10 @@ while True:
     spelare.RUM = mellanrum
     spelare.RUM.kista = chestInMellan()
     if spelare.RUM.kista == True:
-        print("I mellanrummet är det en kista, vill du öppna den?(y/n: )")
+        print("I mellanrummet är det en kista, vill du öppna den?(y/n): ")
         if input() == "y":
                 d.kista = spelare.INV.append(chestItems(1,4))
-                c = spelare.INV[-1].namn
-                print(f"Du hittade...\nEtt {c}")
+                c = spelare.INV[-1]
+                print(f"Du hittade...\nEtt {c.namn}")
+                spelare.INV[-1].STR_bonus = STRBONUS(2, c.STR_bonus)
                 print(spelare.INV[-1].beskriv)
