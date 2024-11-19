@@ -1,5 +1,6 @@
 import random as rand
 import time
+import json
 
 class Player:
     def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP):
@@ -14,6 +15,12 @@ class Player:
     def gain_xp(amount):
       spelare.XP += amount
       print(f"\nYou gained {amount} XP! Current XP: {spelare.XP}/{spelare.get_next_level_xp()}")
+
+    def death(spelare):
+        if spelare.HP<=0:
+            print("you have now died restartr the gane")
+            exit()
+
 
     def get_next_level_xp(spel):
         return 100 * spelare.LVL  
@@ -115,6 +122,10 @@ def equipFunk():
                 equip_namn = spelare.INV_namn[int(vapen)-1].namn
                 myInt = True
                 vapen_list = [equip, equip_namn, True]
+            else:
+                print("Skriv in vilket vapen du vill använda(står under namnet och bonusen)")
+        else:
+            print("Skriv in vilket vapen du vill använda(står under namnet och bonusen)")
     return vapen_list
         
 
@@ -203,15 +214,18 @@ while True:
                 else:
                     print("Skriv in, a, w eller d")
         if invordoor == "i":
-            for value in range (0, len(spelare.INV)):
-                print("\n-------------")
-                print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
-                print(f"({value+1})")
-                print("\n-------------")
             if len(spelare.INV) > 0:
-                equipped = equipFunk()
-                print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
-            input("")
+                for value in range (0, len(spelare.INV)):
+                    print("\n-------------")
+                    print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
+                    print(f"({value+1})")
+                    print("\n-------------")
+                if len(spelare.INV) > 0:
+                    equipped = equipFunk()
+                    print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
+            else:
+                print("Här fanns det inget")
+            input(": ")
     spelare.RUM = d
 
     d.kista = chestIn()
@@ -269,15 +283,17 @@ while True:
                                 print(f"Du slängde ditt hand mot monstret och skadade det med {dmgtomonster}\n-------------")
                             time.sleep(1.2)
                         if drag == "i":
-                            for value in range (0, len(spelare.INV)):
-                                print("\n-------------")
-                                print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
-                                print(f"({value+1})")
-                                print("\n-------------")
                             if len(spelare.INV) > 0:
-                                equipped = equipFunk()
-                                print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
-                        input("")
+                                for value in range (0, len(spelare.INV)):
+                                    print("\n-------------")
+                                    print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
+                                    print(f"({value+1})")
+                                    print("\n-------------")
+                                if len(spelare.INV) > 0:
+                                    equipped = equipFunk()
+                                    print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
+                            else:
+                                print("Här fanns det inget")
                     if HPM > 0:
                         dmgtoplayer = dmgIntM()
                         spelare.HP = spelare.HP - dmgtoplayer
@@ -305,7 +321,7 @@ while True:
                 spelare.INV.append(STRBONUS(appendThing))
                 print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
                 print(spelare.INV_namn[-1].beskriv)
-                input("\n")
+                input("\n:")
 
 
     time.sleep(1)
@@ -320,4 +336,4 @@ while True:
                 spelare.INV.append(STRBONUS(appendThing))
                 print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
                 print(spelare.INV_namn[-1].beskriv)
-                input("\n")
+                input("\n:")
