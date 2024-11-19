@@ -2,10 +2,11 @@ import random as rand
 import time
 
 class Player:
-    def __init__(self,HP,STR,INV,LVL,RUM,XP):
+    def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP):
         self.HP = HP
         self.STR = STR
         self.INV = []
+        self.INV_namn = []
         self.LVL = LVL
         self.RUM = RUM
         self.XP = XP
@@ -48,12 +49,15 @@ class Room:
         self.kista = kista
         #self.trap = trap
 
-def STRBONUS(f1,f2):
-    if rand.randint(1,10) >= 1:
-        bonus = rand.randint(f1, f2)
+def STRBONUS(f1):
+    if f1.namn == "Rostigt svärd":
+        bonus = rand.randint(1,5)
+    elif f1.namn == "Svärd":
+        bonus = rand.randint(5,10)
     else:
         bonus = 1
     return bonus
+        
 def chestIn():
     if rand.randint(1,11) >= 9:
         return True
@@ -101,11 +105,22 @@ def monkatan(a,b,c):
     if c > 14:
         antal += 1
     return antal
-
+def equipFunk():
+    myInt = False
+    while myInt == False:
+        vapen = input("Vilket vill du använda?(1,2,3...): ")
+        if (vapen.isnumeric() == True):
+            if int(vapen) <= len(spelare.INV) and int(vapen) > 0:
+                equip = spelare.INV[int(vapen)-1]
+                equip_namn = spelare.INV_namn[int(vapen)-1].namn
+                myInt = True
+                vapen_list = [equip, equip_namn, True]
+    return vapen_list
+        
 
 #Items
 
-rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,5,rand.randint(2,5))
+rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,rand.randint(1,5),rand.randint(2,5))
 
 
 stal_svard = Items("Svärd","Dammigt men fint skick, perfekt mot monster",True,10,rand.randint(2,7))
@@ -139,7 +154,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(10,5,[],1,start_rum,0)
+spelare = Player(10,5,[],[],1,start_rum,0)
 
 
 #Enemies
@@ -147,6 +162,7 @@ spelare = Player(10,5,[],1,start_rum,0)
 
 print("Du undrar kanske vart du är... \nTre rum väntar på dig, svaret till din fråga kan vara i ett av rummen...")
 input("...")
+equipped = [0,0,False]
 
 while True:
     print("\n-------------\n")
@@ -163,7 +179,7 @@ while True:
     if antal > 0:
         if antal == 1:
             antal = "ett"
-        print(f"Det hörs något i {antal} av rummen...")
+        print(f"!\nDet hörs något i {antal} av rummen...\n!")
    
     d2 = False
     d3 = False
@@ -171,7 +187,7 @@ while True:
         invordoor = input("Vill du utforska ett rum eller kolla ditt inventory?(r/i): ")
         if invordoor == "r":
             while d2 == False:
-                d = input("Vilket av de tre rum vill du utforska?(a/w/d): ")
+                d = input("\nVilket av de tre rum vill du utforska?(a/w/d): ")
                 if d == "a":
                     d = a1
                     d2 = True
@@ -187,10 +203,14 @@ while True:
                 else:
                     print("Skriv in, a, w eller d")
         if invordoor == "i":
-            for value in spelare.INV:
+            for value in range (0, len(spelare.INV)):
                 print("\n-------------")
-                print(f'{value.namn} som har strength bonus {value.STR_bonus}')
+                print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
+                print(f"({value+1})")
                 print("\n-------------")
+            if len(spelare.INV) > 0:
+                equipped = equipFunk()
+                print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
             input("")
     spelare.RUM = d
 
@@ -206,11 +226,12 @@ while True:
         print("Under facklan ser du en kista")
         print("Öppnar du den?(y/n): ")
         if input() == "y":
-                d.kista = spelare.INV.append(chestItems(1,4))
-                c = spelare.INV[-1]
-                print(f"Du hittade...\nEtt {c.namn}")
-                spelare.INV[-1].STR_bonus = STRBONUS(2, c.STR_bonus)
-                print(spelare.INV[-1].beskriv)
+                appendThing = (chestItems(1,4))
+                spelare.INV_namn.append(appendThing)
+                spelare.INV.append(STRBONUS(appendThing))
+                print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
+                print(spelare.INV_namn[-1].beskriv)
+                input("\n")
 
     if spelare.RUM == monster_rum:
         monsterdead = False
@@ -236,8 +257,8 @@ while True:
                     while val == False:
                         drag = input("\nÖppna inv(i)\nSlå ditt slag mot besten(a)\n: ")
                         if drag == "a":
-                            if len(spelare.INV) > 0:
-                                dmgtomonster = dmgS(spelare.INV[-1].STR_bonus)
+                            if equipped[2] == True:
+                                dmgtomonster = dmgS(equipped[0])
                                 HPM = HPM - dmgtomonster
                                 val = True
                                 print(f"Du slängde ditt vapen mot monstret och skadade det med {dmgtomonster}\n-------------")
@@ -248,9 +269,15 @@ while True:
                                 print(f"Du slängde ditt hand mot monstret och skadade det med {dmgtomonster}\n-------------")
                             time.sleep(1.2)
                         if drag == "i":
-                            for value in spelare.INV:
-                                print(f'{value.namn} som har strength bonus {value.STR_bonus}', end=' ')
-                                input("\n")
+                            for value in range (0, len(spelare.INV)):
+                                print("\n-------------")
+                                print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
+                                print(f"({value+1})")
+                                print("\n-------------")
+                            if len(spelare.INV) > 0:
+                                equipped = equipFunk()
+                                print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
+                        input("")
                     if HPM > 0:
                         dmgtoplayer = dmgIntM()
                         spelare.HP = spelare.HP - dmgtoplayer
@@ -273,11 +300,12 @@ while True:
     if (d.kista == True) and (monsterdeadchest == True):
             print("Du ser en kista där också, vill du öppna den?(y/n)")
             if input() == "y":
-                d.kista = spelare.INV.append(chestItems(1,4))
-                c = spelare.INV[-1]
-                print(f"Du hittade...\nEtt {c.namn}")
-                spelare.INV[-1].STR_bonus = STRBONUS(2, c.STR_bonus)
-                print(spelare.INV[-1].beskriv)
+                appendThing = (chestItems(1,4))
+                spelare.INV_namn.append(appendThing)
+                spelare.INV.append(STRBONUS(appendThing))
+                print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
+                print(spelare.INV_namn[-1].beskriv)
+                input("\n")
 
 
     time.sleep(1)
@@ -287,8 +315,9 @@ while True:
     if spelare.RUM.kista == True:
         print("I mellanrummet är det en kista, vill du öppna den?(y/n): ")
         if input() == "y":
-                d.kista = spelare.INV.append(chestItems(1,4))
-                c = spelare.INV[-1]
-                print(f"Du hittade...\nEtt {c.namn}")
-                spelare.INV[-1].STR_bonus = STRBONUS(2, c.STR_bonus)
-                print(spelare.INV[-1].beskriv)
+                appendThing = (chestItems(1,4))
+                spelare.INV_namn.append(appendThing)
+                spelare.INV.append(STRBONUS(appendThing))
+                print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
+                print(spelare.INV_namn[-1].beskriv)
+                input("\n")
