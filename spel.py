@@ -3,7 +3,7 @@ import time
 import json
 
 class Player:
-    def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP):
+    def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP,MAXHP):
         self.HP = HP
         self.STR = STR
         self.INV = []
@@ -11,15 +11,16 @@ class Player:
         self.LVL = LVL
         self.RUM = RUM
         self.XP = XP
+        self.MAXHP = MAXHP
 
     def gain_xp(amount):
       spelare.XP += amount
       print(f"\nYou gained {amount} XP! Current XP: {spelare.XP}/{spelare.get_next_level_xp()}")
 
-    def death(spelare):
-        if spelare.HP<=0:
-            print("you have now died restartr the gane")
-            exit()
+def death(spelareHP):
+    if spelareHP<=0:
+        print("you have now died restartr the gane")
+        exit()
 
 
     def get_next_level_xp(spel):
@@ -27,8 +28,8 @@ class Player:
 
     def level_up(spal):
         spelare.LVL += 1
-        spelare.HP += 10  
-        spelare.STR += 5  
+        spelare.MAXHP += 100  
+        spelare.STR += 25  
         spelare.XP = 0  
 
       
@@ -84,7 +85,7 @@ def chestItems(f3,f4):
 #def trapIn():
 
 def dmgIntM():
-    dmg = rand.randint((spelare.STR - 3), spelare.STR + 2)
+    dmg = rand.randint((spelare.STR - 5), spelare.STR + 10)
     return dmg
 def HPint(ran):
     HP = ran
@@ -99,11 +100,11 @@ def vilketRum(awd):
     if awd > 16:
         awd = monster_rum
     elif awd > 14:
-        awd = katt_rum
+        awd = trap_rum
     elif awd <= 14:
         awd = tomt_rum
     return awd
-def monkatan(a,b,c):
+def monstantal(a,b,c):
     antal = 0
     if a > 14:
         antal += 1
@@ -127,7 +128,22 @@ def equipFunk():
         else:
             print("Skriv in vilket vapen du vill använda(står under namnet och bonusen)")
     return vapen_list
-        
+def bytaFunk(bon,namn):
+    myInt = False
+    while myInt == False:
+        vapen = input("Vilket vill du byta?: ")
+        if (vapen.isnumeric() == True):
+            if int(vapen) <= len(spelare.INV) and int(vapen) > 0:
+                byta = spelare.INV[int(vapen)-1]
+                spelare.INV.pop(int(vapen)-1)
+                spelare.INV.append(bon)
+                spelare.INV_namn.append(namn)   
+                myInt = True
+            else:
+                print("Skriv in vilket vapen du vill byta")
+        else:
+            print("Skriv in vilket vapen du vill byta")
+    return byta
 
 #Items
 
@@ -155,7 +171,7 @@ monster_rum = Room("Monster rum", "Det är mörkt, men det hörs att något anda
 tomt_rum = Room("Tomt", "En fackla lyser upp rummet, men inget annat", chestIn())
 
 
-katt_rum = Room("Katt Rum", "Det är mörkt, men det hörs att något andas.\n Det blir tyst... \nEtt öga lyser upp rummet och du ser...\n \nEn katt!",chestIn())
+trap_rum = Room("Trap Rum", "När du öppnar dörren så blir du träffad av en pil, du är nu förgiftad.",chestIn())
 
 
 mellanrum_monster = Room("MellanM", "Du klarade dig, bra att det finns en eld att värma dig.\n Använd kött du fick av besten eller drycker för att få tillbaka hälsa. Ett nytt rum väntar på dig...",chestInMellan())
@@ -165,7 +181,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(10,5,[],[],1,start_rum,0)
+spelare = Player(1,5,[],[],1,start_rum,0,10)
 
 
 #Enemies
@@ -173,6 +189,7 @@ spelare = Player(10,5,[],[],1,start_rum,0)
 
 print("Du undrar kanske vart du är... \nTre rum väntar på dig, svaret till din fråga kan vara i ett av rummen...")
 input("...")
+antalRum = 0
 equipped = [0,0,False]
 
 while True:
@@ -185,7 +202,7 @@ while True:
     a1 = vilketRum(a)
     w1 = vilketRum(w)
     d1 = vilketRum(d)
-    antal = monkatan(a,w,d)
+    antal = monstantal(a,w,d)
     
     if antal > 0:
         if antal == 1:
@@ -223,6 +240,8 @@ while True:
                 if len(spelare.INV) > 0:
                     equipped = equipFunk()
                     print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
+                if antalRum > 0:
+                    print(f"Du har gått igenom {antalRum} rum")
             else:
                 print("Här fanns det inget")
             input(": ")
@@ -236,7 +255,7 @@ while True:
     print(spelare.RUM.beskrivn)
     monsterdeadchest = False
     time.sleep(1)
-    if (d.kista == True) and (d != monster_rum) and (d != katt_rum):
+    if (d.kista == True) and (d != monster_rum) and (d != trap_rum):
         print("Under facklan ser du en kista")
         print("Öppnar du den?(y/n): ")
         if input() == "y":
@@ -252,7 +271,7 @@ while True:
         monsterdeadchest = False
         vap = chestItems(1,2).namn
         print(f"\nMonstret vrålar och tar fram ett {vap}")
-        HPM = HPint(rand.randint((spelare.HP - 3), spelare.HP + 3))
+        HPM = HPint(rand.randint((spelare.MAXHP - 3), spelare.MAXHP + 3))
         
         while monsterdead == False:
             print("Hur kommer du ta dig ann detta?\nSpringa iväg(-3HP, s),    ATTACK!(a)")
@@ -260,6 +279,9 @@ while True:
             if enc == "s":
                 monsterdead = True
                 spelare.HP -= 3
+                if death(spelare.HP) == True:
+                    print("You have now died pls restart the game")
+                    exit()      
             elif enc == "a":      
                 print("Monstret rör sig mot dig med vapnet")
                 while HPM > 0:
@@ -299,6 +321,9 @@ while True:
                         spelare.HP = spelare.HP - dmgtoplayer
                         print(f"\nMonstret slänger vapnet mot dig och du förlorar {dmgtoplayer} hälsa")
                         time.sleep(1.2)
+                        if death(spelare.HP) == True:
+                            print("You have now died pls restart the game")
+                            exit()
                 if HPM <= 0:
                     monsterdead = True
                     monsterdeadchest = True
@@ -310,8 +335,6 @@ while True:
             if spelare.XP >= spelare.get_next_level_xp():
                 spelare.level_up()
                 print(f"You have leveld up to level {spelare.LVL}")
-
- 
                 
     if (d.kista == True) and (monsterdeadchest == True):
             print("Du ser en kista där också, vill du öppna den?(y/n)")
@@ -326,14 +349,27 @@ while True:
 
     time.sleep(1)
     print("\n")
+    antalRum += 1
     spelare.RUM = mellanrum
     spelare.RUM.kista = chestInMellan()
     if spelare.RUM.kista == True:
         print("I mellanrummet är det en kista, vill du öppna den?(y/n): ")
         if input() == "y":
                 appendThing = (chestItems(1,4))
-                spelare.INV_namn.append(appendThing)
-                spelare.INV.append(STRBONUS(appendThing))
-                print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
-                print(spelare.INV_namn[-1].beskriv)
+                strengthbon = STRBONUS(appendThing)
+                if len(spelare.INV) <= 4:
+                    spelare.INV_namn.append(appendThing)
+                    spelare.INV.append(strengthbon)
+                    print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
+                    print(spelare.INV_namn[-1].beskriv)
+                else:
+                    print("Du har inte tillräckligt med plats i ditt inventory")
+                    byte = input(f"Vill du byta ut något i ditt inventory mot {appendThing.namn} med strength bonusen {strengthbon}?(y/n): ")
+                    if byte == "y":
+                        for value in range (0, len(spelare.INV)):
+                            print("\n-------------")
+                            print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
+                            print(f"({value+1})")
+                            print("\n-------------")
+                        bytaFunk(strengthbon,appendThing.namn)
                 input("\n:")
