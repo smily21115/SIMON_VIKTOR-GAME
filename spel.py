@@ -31,7 +31,7 @@ def death(spelareHP):
         spelare.MAXHP += 100  
         spelare.STR += 25  
         spelare.XP = 0  
-ddsddf asd
+
         if spelare.LVL == 10:
             print("\nYou have reached level 10 and won the game! Congratulations!")
             exit()
