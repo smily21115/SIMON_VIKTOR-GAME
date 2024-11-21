@@ -3,7 +3,7 @@ import time
 import json
 
 class Player:
-    def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP,MAXHP):
+    def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP,MAXHP,Gold):
         self.HP = HP
         self.STR = STR
         self.INV = []
@@ -12,6 +12,7 @@ class Player:
         self.RUM = RUM
         self.XP = XP
         self.MAXHP = MAXHP
+        self.Gold = Gold
 
     def gain_xp(amount):
       spelare.XP += amount
@@ -22,7 +23,6 @@ def death(spelareHP):
         print("you have now died restartr the gane")
         exit()
 
-
     def get_next_level_xp(spel):
         return 100 * spelare.LVL  
 
@@ -31,12 +31,9 @@ def death(spelareHP):
         spelare.MAXHP += 100  
         spelare.STR += 25  
         spelare.XP = 0  
-ddsddf asd
         if spelare.LVL == 10:
             print("\nYou have reached level 10 and won the game! Congratulations!")
             exit()
-
-
 class Enemies:
     def __init__(self,MHP,MSTR):
         self.MHP = rand.randint(1,spelare.HP)
