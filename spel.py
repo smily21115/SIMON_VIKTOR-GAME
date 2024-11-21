@@ -3,7 +3,7 @@ import time
 import json
 
 class Player:
-    def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP,MAXHP):
+    def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP,MAXHP,Gold):
         self.HP = HP
         self.STR = STR
         self.INV = []
@@ -12,16 +12,16 @@ class Player:
         self.RUM = RUM
         self.XP = XP
         self.MAXHP = MAXHP
+        self.Gold = Gold
 
     def gain_xp(amount):
       spelare.XP += amount
       print(f"\nYou gained {amount} XP! Current XP: {spelare.XP}/{spelare.get_next_level_xp()}")
 
-def death(spelareHP):
-    if spelareHP<=0:
-        print("you have now died restartr the gane")
-        exit()
-
+    def death(spelareHP):
+        if spelareHP<=0:
+            print("you have now died restartr the gane")
+            exit()
 
     def get_next_level_xp(spel):
         return 100 * spelare.LVL  
@@ -31,12 +31,9 @@ def death(spelareHP):
         spelare.MAXHP += 100  
         spelare.STR += 25  
         spelare.XP = 0  
-
         if spelare.LVL == 10:
             print("\nYou have reached level 10 and won the game! Congratulations!")
             exit()
-
-
 class Enemies:
     def __init__(self,MHP,MSTR):
         self.MHP = rand.randint(1,spelare.HP)
@@ -181,7 +178,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(1,5,[],[],1,start_rum,0,10)
+spelare = Player(10,5,[],[],1,start_rum,0,10,0)
 
 
 #Enemies
@@ -260,11 +257,23 @@ while True:
         print("Öppnar du den?(y/n): ")
         if input() == "y":
                 appendThing = (chestItems(1,4))
-                spelare.INV_namn.append(appendThing)
-                spelare.INV.append(STRBONUS(appendThing))
-                print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
-                print(spelare.INV_namn[-1].beskriv)
-                input("\n")
+                strengthbon = STRBONUS(appendThing)
+                if len(spelare.INV) <= 4:
+                    spelare.INV_namn.append(appendThing)
+                    spelare.INV.append(strengthbon)
+                    print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
+                    print(spelare.INV_namn[-1].beskriv)
+                else:
+                    print("Du har inte tillräckligt med plats i ditt inventory")
+                    byte = input(f"Vill du byta ut något i ditt inventory mot {appendThing.namn} med strength bonusen {strengthbon}?(y/n): ")
+                    if byte == "y":
+                        for value in range (0, len(spelare.INV)):
+                            print("\n-------------")
+                            print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
+                            print(f"({value+1})")
+                            print("\n-------------")
+                        bytaFunk(strengthbon,appendThing.namn)
+                input("\n:")
 
     if spelare.RUM == monster_rum:
         monsterdead = False
@@ -279,7 +288,7 @@ while True:
             if enc == "s":
                 monsterdead = True
                 spelare.HP -= 3
-                if death(spelare.HP) == True:
+                if spelare.death(spelare.HP) == True:
                     print("You have now died pls restart the game")
                     exit()      
             elif enc == "a":      
@@ -321,7 +330,7 @@ while True:
                         spelare.HP = spelare.HP - dmgtoplayer
                         print(f"\nMonstret slänger vapnet mot dig och du förlorar {dmgtoplayer} hälsa")
                         time.sleep(1.2)
-                        if death(spelare.HP) == True:
+                        if spelare.death(spelare.HP) == True:
                             print("You have now died pls restart the game")
                             exit()
                 if HPM <= 0:
@@ -340,10 +349,22 @@ while True:
             print("Du ser en kista där också, vill du öppna den?(y/n)")
             if input() == "y":
                 appendThing = (chestItems(1,4))
-                spelare.INV_namn.append(appendThing)
-                spelare.INV.append(STRBONUS(appendThing))
-                print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
-                print(spelare.INV_namn[-1].beskriv)
+                strengthbon = STRBONUS(appendThing)
+                if len(spelare.INV) <= 4:
+                    spelare.INV_namn.append(appendThing)
+                    spelare.INV.append(strengthbon)
+                    print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
+                    print(spelare.INV_namn[-1].beskriv)
+                else:
+                    print("Du har inte tillräckligt med plats i ditt inventory")
+                    byte = input(f"Vill du byta ut något i ditt inventory mot {appendThing.namn} med strength bonusen {strengthbon}?(y/n): ")
+                    if byte == "y":
+                        for value in range (0, len(spelare.INV)):
+                            print("\n-------------")
+                            print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
+                            print(f"({value+1})")
+                            print("\n-------------")
+                        bytaFunk(strengthbon,appendThing.namn)
                 input("\n:")
 
 
