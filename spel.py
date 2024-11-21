@@ -18,10 +18,10 @@ class Player:
       spelare.XP += amount
       print(f"\nYou gained {amount} XP! Current XP: {spelare.XP}/{spelare.get_next_level_xp()}")
 
-    def death(spelareHP):
-        if spelareHP<=0:
-            print("you have now died restartr the gane")
-            exit()
+def death(spelareHP):
+    if spelareHP<=0:
+        print("you have now died restartr the gane")
+        exit()
 
     def get_next_level_xp(spel):
         return 100 * spelare.LVL  
@@ -178,7 +178,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(10,5,[],[],1,start_rum,0,10,0)
+spelare = Player(1,5,[],[],1,start_rum,0,10,0)
 
 
 #Enemies
@@ -288,7 +288,7 @@ while True:
             if enc == "s":
                 monsterdead = True
                 spelare.HP -= 3
-                if spelare.death(spelare.HP) == True:
+                if death(spelare.HP) == True:
                     print("You have now died pls restart the game")
                     exit()      
             elif enc == "a":      
@@ -330,7 +330,7 @@ while True:
                         spelare.HP = spelare.HP - dmgtoplayer
                         print(f"\nMonstret slänger vapnet mot dig och du förlorar {dmgtoplayer} hälsa")
                         time.sleep(1.2)
-                        if spelare.death(spelare.HP) == True:
+                        if death(spelare.HP) == True:
                             print("You have now died pls restart the game")
                             exit()
                 if HPM <= 0:
