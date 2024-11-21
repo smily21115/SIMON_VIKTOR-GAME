@@ -3,11 +3,12 @@ import time
 import json
 
 class Player:
-    def __init__(self,HP,STR,INV,INV_namn,LVL,RUM,XP,MAXHP,Gold):
+    def __init__(self,HP,STR,INV,INV_namn,INV_dur,LVL,RUM,XP,MAXHP,Gold):
         self.HP = HP
         self.STR = STR
         self.INV = []
         self.INV_namn = []
+        self.INV_dur = []
         self.LVL = LVL
         self.RUM = RUM
         self.XP = XP
@@ -59,17 +60,27 @@ def STRBONUS(f1):
         bonus = rand.randint(1,5)
     elif f1.namn == "Svärd":
         bonus = rand.randint(5,10)
+    elif f1.namn == "Unikt Svärd":
+        bonus = rand.randint(10,20)
     else:
         bonus = 1
     return bonus
         
+def durFunk(f1):
+    if f1.namn == "Rostigt svärd":
+        dur = 7
+    elif f1.namn == "Svärd":
+        dur = 11
+    elif f1.namn == "Unikt Svärd":
+        dur = 15
+    return dur
 def chestIn():
     if rand.randint(1,11) >= 9:
         return True
     else:
         return False
 def chestInMellan():
-    if rand.randint(1,5) <= 4:
+    if rand.randint(1,5) > 4:
         return True
     else:
         return False
@@ -77,9 +88,13 @@ def chestItems(f3,f4):
     i = rand.randint(f3,f4)
     if i <= 3:
         return rostigt_svard
-    elif i == f4:
-        return stal_svard
-#def trapIn():
+    elif i >= f4:
+        if spelare.LVL >= 3:
+            if rand.randint(1,2) == 1:
+                return damascus_svard
+        else:
+            return stal_svard
+    
 
 def dmgIntM():
     dmg = rand.randint((spelare.STR - 5), spelare.STR + 1)
@@ -94,11 +109,11 @@ def dmgS(strbonus):
         dmgS = rand.randint(spelare.STR -1, spelare.STR + 1)
     return dmgS
 def vilketRum(awd):
-    if awd > 16:
+    if awd > 14:
         awd = monster_rum
-    elif awd > 14:
+    elif awd >= 13:
         awd = trap_rum
-    elif awd <= 14:
+    elif awd < 13:
         awd = tomt_rum
     return awd
 def monstantal(a,b,c):
@@ -118,14 +133,16 @@ def equipFunk():
             if int(vapen) <= len(spelare.INV) and int(vapen) > 0:
                 equip = spelare.INV[int(vapen)-1]
                 equip_namn = spelare.INV_namn[int(vapen)-1].namn
+                durequip = spelare.INV_dur[int(vapen)-1]
                 myInt = True
-                vapen_list = [equip, equip_namn, True]
+                vapen = int(vapen)-1
+                vapen_list = [equip, equip_namn, True, durequip, vapen]
             else:
                 print("Skriv in vilket vapen du vill använda(står under namnet och bonusen)")
         else:
             print("Skriv in vilket vapen du vill använda(står under namnet och bonusen)")
     return vapen_list
-def bytaFunk(bon,namn):
+def bytaFunk(bon,namn,dura):
     myInt = False
     while myInt == False:
         vapen = input("Vilket vill du byta?: ")
@@ -134,20 +151,23 @@ def bytaFunk(bon,namn):
                 byta = spelare.INV[int(vapen)-1]
                 spelare.INV.pop(int(vapen)-1)
                 spelare.INV.append(bon)
-                spelare.INV_namn.append(namn)   
+                spelare.INV_namn.append(namn)  
+                spelare.INV_dur.append(dura)
                 myInt = True
             else:
                 print("Skriv in vilket vapen du vill byta")
         else:
             print("Skriv in vilket vapen du vill byta")
     return byta
-
+def durSvard(dur):
+    dur = dur-1
+    return dur
 #Items
 
-rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,rand.randint(1,5),rand.randint(2,5))
+rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,rand.randint(1,5),7)
 
 
-stal_svard = Items("Svärd","Dammigt men fint skick, perfekt mot monster",True,10,rand.randint(2,7))
+stal_svard = Items("Svärd","Dammigt men fint skick, perfekt mot monster",True,10,11)
 
 
 damascus_svard = Items("Unikt svärd","Svärd gjort av olika metaller som skapar ett fantastiskt mönster. Slitstyrkan är unikt",True,20,rand.randint(5,10))
@@ -178,7 +198,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(10,5,[],[],1,start_rum,0,10,0)
+spelare = Player(10,5,[],[],[],1,start_rum,0,10,0)
 
 
 #Enemies
@@ -187,7 +207,7 @@ spelare = Player(10,5,[],[],1,start_rum,0,10,0)
 print("Du undrar kanske vart du är... \nTre rum väntar på dig, svaret till din fråga kan vara i ett av rummen...")
 input("...")
 antalRum = 0
-equipped = [0,0,False]
+equipped = [0,0,False,0]
 
 while True:
     print("\n-------------\n")
@@ -236,7 +256,7 @@ while True:
                     print("\n-------------")
                 if len(spelare.INV) > 0:
                     equipped = equipFunk()
-                    print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
+                    print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]} och slitstyrkan {equipped[3]}")
                 if antalRum > 0:
                     print(f"Du har gått igenom {antalRum} rum")
             else:
@@ -258,9 +278,11 @@ while True:
         if input() == "y":
                 appendThing = (chestItems(1,4))
                 strengthbon = STRBONUS(appendThing)
+                dur = durFunk(appendThing)
                 if len(spelare.INV) <= 4:
                     spelare.INV_namn.append(appendThing)
                     spelare.INV.append(strengthbon)
+                    spelare.INV_dur.append(dur)
                     print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
                     print(spelare.INV_namn[-1].beskriv)
                 else:
@@ -272,7 +294,7 @@ while True:
                             print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
                             print(f"({value+1})")
                             print("\n-------------")
-                        bytaFunk(strengthbon,appendThing.namn)
+                        bytaFunk(strengthbon,appendThing.namn,dur)
                 input("\n:")
 
     if spelare.RUM == monster_rum:
@@ -306,7 +328,13 @@ while True:
                                 dmgtomonster = dmgS(equipped[0])
                                 HPM = HPM - dmgtomonster
                                 val = True
+                                spelare.INV_dur[equipped[4]] = durSvard(spelare.INV_dur[equipped[4]])
                                 print(f"Du slängde ditt vapen mot monstret och skadade det med {dmgtomonster}\n-------------")
+                                if spelare.INV_dur[equipped[4]] < 1:
+                                    print("Ditt svärd gick sönder")
+                                    spelare.INV.pop(equipped[4])
+                                    spelare.INV_dur.pop(equipped[4])
+                                    spelare.INV_namn.pop(equipped[4])
                             else:
                                 dmgtomonster = dmgS(0)
                                 HPM = HPM - dmgtomonster
@@ -350,9 +378,11 @@ while True:
             if input() == "y":
                 appendThing = (chestItems(1,4))
                 strengthbon = STRBONUS(appendThing)
+                dur = durFunk(appendThing)
                 if len(spelare.INV) <= 4:
                     spelare.INV_namn.append(appendThing)
                     spelare.INV.append(strengthbon)
+                    spelare.INV_dur.append(dur)
                     print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
                     print(spelare.INV_namn[-1].beskriv)
                 else:
@@ -364,11 +394,10 @@ while True:
                             print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
                             print(f"({value+1})")
                             print("\n-------------")
-                        bytaFunk(strengthbon,appendThing.namn)
+                        bytaFunk(strengthbon,appendThing.namn,dur)
                 input("\n:")
 
 
-    time.sleep(1)
     print("\n")
     antalRum += 1
     spelare.RUM = mellanrum
@@ -378,9 +407,11 @@ while True:
         if input() == "y":
                 appendThing = (chestItems(1,4))
                 strengthbon = STRBONUS(appendThing)
+                dur = durFunk(appendThing)
                 if len(spelare.INV) <= 4:
                     spelare.INV_namn.append(appendThing)
                     spelare.INV.append(strengthbon)
+                    spelare.INV_dur.append(dur)
                     print(f"Du hittade...\nEtt {spelare.INV_namn[-1].namn}") 
                     print(spelare.INV_namn[-1].beskriv)
                 else:
@@ -392,5 +423,5 @@ while True:
                             print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
                             print(f"({value+1})")
                             print("\n-------------")
-                        bytaFunk(strengthbon,appendThing.namn)
+                        bytaFunk(strengthbon,appendThing.namn,dur)
                 input("\n:")
