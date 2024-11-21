@@ -14,6 +14,8 @@ class Player:
         self.XP = XP
         self.MAXHP = MAXHP
         self.Gold = Gold
+class traveling_merchant:
+    def __init__(self,)
 
     def gain_xp(amount):
       spelare.XP += amount
@@ -23,6 +25,10 @@ def death(spelareHP):
     if spelareHP<=0:
         print("you have now died restartr the gane")
         exit()
+
+def gain_Gold(amount):
+    spelare.GOld += amount
+    print(f"\n You gained {amount} Gold you now have{spelare.Gold}")
 
 def get_next_level_xp():
     return 100 * spelare.LVL  
@@ -368,6 +374,9 @@ while True:
         if monsterdeadchest == True:
             print("you have killed the monster")
             spelare.XP += rand.randint(10,25)
+            Gold = rand.randint(7,17)
+            spelare.Gold += Gold
+            print(f"\n You gained {Gold} Gold you now have {spelare.Gold}")
             print(f"{spelare.XP}/{get_next_level_xp()}XP")
             if spelare.XP >= get_next_level_xp():
                 level_up()
