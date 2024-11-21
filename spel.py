@@ -23,17 +23,17 @@ def death(spelareHP):
         print("you have now died restartr the gane")
         exit()
 
-    def get_next_level_xp(spel):
-        return 100 * spelare.LVL  
+def get_next_level_xp():
+    return 100 * spelare.LVL  
 
-    def level_up(spal):
-        spelare.LVL += 1
-        spelare.MAXHP += 100  
-        spelare.STR += 25  
-        spelare.XP = 0  
-        if spelare.LVL == 10:
-            print("\nYou have reached level 10 and won the game! Congratulations!")
-            exit()
+def level_up():
+    spelare.LVL += 1
+    spelare.MAXHP += 100  
+    spelare.STR += 25  
+    spelare.XP = 0  
+    if spelare.LVL == 10:
+        print("\nYou have reached level 10 and won the game! Congratulations!")
+        exit()
 class Enemies:
     def __init__(self,MHP,MSTR):
         self.MHP = rand.randint(1,spelare.HP)
@@ -82,7 +82,7 @@ def chestItems(f3,f4):
 #def trapIn():
 
 def dmgIntM():
-    dmg = rand.randint((spelare.STR - 5), spelare.STR + 10)
+    dmg = rand.randint((spelare.STR - 5), spelare.STR + 1)
     return dmg
 def HPint(ran):
     HP = ran
@@ -178,7 +178,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(1,5,[],[],1,start_rum,0,10,0)
+spelare = Player(10,5,[],[],1,start_rum,0,10,0)
 
 
 #Enemies
@@ -340,9 +340,9 @@ while True:
         if monsterdeadchest == True:
             print("you have killed the monster")
             spelare.XP += rand.randint(10,25)
-            print(f"{spelare.XP}/{spelare.get_next_level_xp()}XP")
-            if spelare.XP >= spelare.get_next_level_xp():
-                spelare.level_up()
+            print(f"{spelare.XP}/{get_next_level_xp()}XP")
+            if spelare.XP >= get_next_level_xp():
+                level_up()
                 print(f"You have leveld up to level {spelare.LVL}")
                 
     if (d.kista == True) and (monsterdeadchest == True):
