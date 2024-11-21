@@ -14,8 +14,8 @@ class Player:
         self.XP = XP
         self.MAXHP = MAXHP
         self.Gold = Gold
-class traveling_merchant:
-    def __init__(self,)
+#class traveling_merchant:
+    #def __init__(self,)
 
     def gain_xp(amount):
       spelare.XP += amount
