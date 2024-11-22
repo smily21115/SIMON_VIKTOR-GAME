@@ -18,7 +18,7 @@ class Player:
     #def __init__(self,)
     def check_stats(self):
         print(f"---player stats---")
-        print(f"{self.HP}/{self.MAXHP}")
+        print(f"{self.HP}HP/{self.MAXHP}HP")
         print(f"Strength {self.STR}")
         print(f"Level {self.LVL}")
         print(f"{self.XP}XP / {self.get_next_level_xp()}XP")
