@@ -16,33 +16,39 @@ class Player:
         self.Gold = Gold
 #class traveling_merchant:
     #def __init__(self,)
+    def check_stats(self):
+        print(f"---player stats---")
+        print(f"{self.HP}/{self.MAXHP}")
+        print(f"Strength {self.STR}")
+        print(f"Level {self.LVL}")
+        print(f"{self.XP}XP / {self.get_next_level_xp()}XP")
+    
+    def gain_xp(self,amount):
+      self.XP += amount
+      print(f"\nYou gained {amount} XP! Current XP: {self.XP}/{self.get_next_level_xp()}")
 
-    def gain_xp(amount):
-      spelare.XP += amount
-      print(f"\nYou gained {amount} XP! Current XP: {spelare.XP}/{spelare.get_next_level_xp()}")
+    def death(self):
+        if self.HP<=0:
+            print("you have now died restart the gane")
+            exit()
 
-def death(spelareHP):
-    if spelareHP<=0:
-        print("you have now died restartr the gane")
-        exit()
+    def gain_Gold(self,amount):
+        self.Gold += amount
+        print(f"\n You gained {amount} Gold you now have{self.Gold}")
 
-def gain_Gold(amount):
-    spelare.GOld += amount
-    print(f"\n You gained {amount} Gold you now have{spelare.Gold}")
+    def get_next_level_xp(self):
+        base_XP = 100
+        scaling = 1.5
+        return int(base_XP* (self.LVL**scaling))
 
-def get_next_level_xp():
-    base_XP = 100
-    scaling = 1.5
-    return int(base_XP* (spelare.LVL**scaling))
-
-def level_up():
-    spelare.LVL += 1
-    spelare.MAXHP +=15   
-    spelare.STR += 7  
-    spelare.XP = 0  
-    if spelare.LVL == 10:
-        print("\nYou have reached level 10 and won the game! Congratulations!")
-        exit()
+    def level_up(self):
+        self.LVL += 1
+        self.MAXHP +=15   
+        self.STR += 7  
+        self.XP = 0  
+        if self.LVL == 10:
+            print("\nYou have reached level 10 and won the game! Congratulations!")
+            exit()
         
 class Enemies:
     def __init__ (self):
@@ -103,7 +109,6 @@ def chestItems(f3,f4):
                 return damascus_svard
         else:
             return stal_svard
-    
 
 def dmgIntM():
     dmg = rand.randint(int(spelare.STR/100), int(spelare.STR *1))
@@ -244,7 +249,7 @@ while True:
     d2 = False
     d3 = False
     while d3 == False:
-        invordoor = input("Vill du utforska ett rum eller kolla ditt inventory?(r/i): ")
+        invordoor = input("Vill du utforska ett rum, kolla ditt inventory eller kolla dina stats?(r/i/s): ")
         if invordoor == "r":
             while d2 == False:
                 d = input("\nVilket av de tre rum vill du utforska?(a/w/d): ")
@@ -262,7 +267,7 @@ while True:
                     d3 = True
                 else:
                     print("Skriv in, a, w eller d")
-        if invordoor == "i":
+        elif invordoor == "i":
             if len(spelare.INV) > 0:
                 for value in range (0, len(spelare.INV)):
                     print("\n-------------")
@@ -277,7 +282,11 @@ while True:
             else:
                 print("Här fanns det inget")
             input(": ")
-    spelare.RUM = d
+        elif invordoor == "s":
+            spelare.check_stats()  # Show player stats
+            input(": ")
+
+    spelare.RUM = d  # Update the current room
 
     d.kista = chestIn()
     if (d == tomt_rum) and (d.kista == True):
@@ -373,7 +382,7 @@ while True:
                         spelare.HP = spelare.HP - dmgtoplayer
                         print(f"\nMonstret slänger vapnet mot dig och du förlorar {dmgtoplayer} hälsa")
                         time.sleep(1.2)
-                        if death(spelare.HP) == True:
+                        if spelare.death() == True:
                             print("You have now died pls restart the game")
                             exit()
                 if HPM <= 0:
@@ -388,9 +397,9 @@ while True:
             spelare.Gold += Gold
             print(f"\n You gained {Gold} Gold, you now have {spelare.Gold} Gold")
             print(f"\n ")
-            print(f"The mosnter dropped {XP}XP, you now have {spelare.XP}XP and need {get_next_level_xp()}XP to level up")
-            if spelare.XP >= get_next_level_xp():
-                level_up()
+            print(f"The mosnter dropped {XP}XP, you now have {spelare.XP}XP and need {spelare.get_next_level_xp()}XP to level up")
+            if spelare.XP >= spelare.get_next_level_xp():
+                spelare.level_up()
                 print(f"You have leveld up to level {spelare.LVL}")
                 
     if (d.kista == True) and (monsterdeadchest == True):
