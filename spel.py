@@ -31,20 +31,23 @@ def gain_Gold(amount):
     print(f"\n You gained {amount} Gold you now have{spelare.Gold}")
 
 def get_next_level_xp():
-    return 100 * spelare.LVL  
+    base_XP = 100
+    scaling = 1.5
+    return int(base_XP* (spelare.LVL**scaling))
 
 def level_up():
     spelare.LVL += 1
-    spelare.MAXHP += 100  
-    spelare.STR += 25  
+    spelare.MAXHP +=15   
+    spelare.STR += 7  
     spelare.XP = 0  
     if spelare.LVL == 10:
         print("\nYou have reached level 10 and won the game! Congratulations!")
         exit()
+        
 class Enemies:
-    def __init__(self,MHP,MSTR):
-        self.MHP = rand.randint(1,spelare.HP)
-        self.MSTR = rand.randint(1,spelare.STR)
+    def __init__ (self):
+        self.MHP = rand.randint(10,15) + (spelare.LVL*5)
+        self.MSTR = rand.randint(5,10) + (spelare.LVL*3)
 
 class Items:
     def __init__(self,namn,beskriv,anvanda,STR_bonus,slitstyrk):
@@ -103,17 +106,20 @@ def chestItems(f3,f4):
     
 
 def dmgIntM():
-    dmg = rand.randint((spelare.STR - 5), spelare.STR + 1)
+    dmg = rand.randint(int(spelare.STR/100), int(spelare.STR *1))
     return dmg
+
 def HPint(ran):
     HP = ran
     return HP
+
 def dmgS(strbonus):
     if strbonus > 0:
-        dmgS = (rand.randint(spelare.STR-1, spelare.STR+1)) + (strbonus)
+        dmgS = (rand.randint(int(spelare.STR/6), int(spelare.STR*1.4))) + strbonus
     else:
-        dmgS = rand.randint(spelare.STR -1, spelare.STR + 1)
+        dmgS = rand.randint(int(spelare.STR / 6), int(spelare.STR * 1.4))
     return dmgS
+
 def vilketRum(awd):
     if awd > 14:
         awd = monster_rum
@@ -122,6 +128,7 @@ def vilketRum(awd):
     elif awd < 13:
         awd = tomt_rum
     return awd
+
 def monstantal(a,b,c):
     antal = 0
     if a > 14:
@@ -131,6 +138,7 @@ def monstantal(a,b,c):
     if c > 14:
         antal += 1
     return antal
+
 def equipFunk():
     myInt = False
     while myInt == False:
@@ -148,6 +156,7 @@ def equipFunk():
         else:
             print("Skriv in vilket vapen du vill använda(står under namnet och bonusen)")
     return vapen_list
+
 def bytaFunk(bon,namn,dura):
     myInt = False
     while myInt == False:
@@ -373,11 +382,13 @@ while True:
                     
         if monsterdeadchest == True:
             print("you have killed the monster")
-            spelare.XP += rand.randint(10,25)
+            XP = rand.randint(10,25)
+            spelare.XP += XP
             Gold = rand.randint(7,17)
             spelare.Gold += Gold
-            print(f"\n You gained {Gold} Gold you now have {spelare.Gold}")
-            print(f"{spelare.XP}/{get_next_level_xp()}XP")
+            print(f"\n You gained {Gold} Gold, you now have {spelare.Gold} Gold")
+            print(f"\n ")
+            print(f"The mosnter dropped {XP}XP, you now have {spelare.XP}XP and need {get_next_level_xp()}XP to level up")
             if spelare.XP >= get_next_level_xp():
                 level_up()
                 print(f"You have leveld up to level {spelare.LVL}")
