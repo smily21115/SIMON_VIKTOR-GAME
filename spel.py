@@ -334,7 +334,7 @@ while True:
             if enc == "s":
                 monsterdead = True
                 spelare.HP -= 3
-                if death(spelare.HP) == True:
+                if spelare.death() == True:
                     print("You have now died pls restart the game")
                     exit()      
             elif enc == "a":      
