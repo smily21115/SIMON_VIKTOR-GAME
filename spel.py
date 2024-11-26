@@ -19,7 +19,7 @@ class Player:
     def check_stats(self):
         print(f"---player stats---")
         print(f"{self.HP}HP/{self.MAXHP}HP")
-        print(f"Strength {self.STR}")
+        print(f"Strength {self.STR+equipped[0]}")
         print(f"Level {self.LVL}")
         print(f"{self.XP}XP / {self.get_next_level_xp()}XP")
     
@@ -90,12 +90,12 @@ def durFunk(f1):
         dur = 15
     return dur
 def chestIn():
-    if rand.randint(1,11) >= 9:
+    if rand.randint(1,11) > 9:
         return True
     else:
         return False
 def chestInMellan():
-    if rand.randint(1,5) > 4:
+    if rand.randint(1,7) > 6:
         return True
     else:
         return False
@@ -202,7 +202,7 @@ hephaestus_svard = Items("Unikt svärd","Glänser som om den smeds i samma stund
 start_rum = Room("Start rum","","")
 
 
-monster_rum = Room("Monster rum", "Det är mörkt, men det hörs att något andas.\n Det blir tyst... \n Ett öga lyser upp rummet och du ser...\n  \nEtt monster, DÖDA DET!",chestIn())
+monster_rum = Room("Monster rum", "Ett monster, DÖDA DET!",chestIn())
 
 
 tomt_rum = Room("Tomt", "En fackla lyser upp rummet, men inget annat", chestIn())
