@@ -134,6 +134,9 @@ def vilketRum(awd):
         awd = tomt_rum
     return awd
 
+def trapRum(rum):
+    giftTid = int(rum+3)
+    return giftTid
 def monstantal(a,b,c):
     antal = 0
     if a > 14:
@@ -220,7 +223,6 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 #Player
 spelare = Player(10,5,[],[],[],1,start_rum,0,10,0)
 
-
 #Enemies
 
 
@@ -228,11 +230,20 @@ print("Du undrar kanske vart du är... \nTre rum väntar på dig, svaret till di
 input("...")
 antalRum = 0
 equipped = [0,0,False,0]
+tidGift = 0
 
 while True:
     print("\n-------------\n")
     print(spelare.RUM.beskrivn)
     antal = 0
+    if tidGift > antalRum:
+        spelare.HP = spelare.HP - 2
+        print("\n-------------")
+        print("Du är förgiftad och förlorade två HP")
+        print("\n-------------")
+        if spelare.death() == True:
+            print("You have now died pls restart the game")
+            exit()
     a = rand.randint(1,20)
     w = rand.randint(1,20)
     d = rand.randint(1,20)
@@ -244,7 +255,7 @@ while True:
     if antal > 0:
         if antal == 1:
             antal = "ett"
-        print(f"!\nDet hörs något i {antal} av rummen...\n!")
+        print(f"-------------!\nDet hörs något i {antal} av rummen...\n-------------!")
    
     d2 = False
     d3 = False
@@ -296,7 +307,11 @@ while True:
     print(spelare.RUM.beskrivn)
     monsterdeadchest = False
     time.sleep(1)
-    if (d.kista == True) and (d != monster_rum) and (d != trap_rum):
+    if (d == trap_rum):
+        forgiftad = True
+        tidGift = trapRum(antalRum)
+
+    if (d.kista == True) and (d == tomt_rum):
         print("Under facklan ser du en kista")
         print("Öppnar du den?(y/n): ")
         if input() == "y":
@@ -363,7 +378,7 @@ while True:
                                 dmgtomonster = dmgS(0)
                                 HPM = HPM - dmgtomonster
                                 val = True
-                                print(f"Du slängde ditt hand mot monstret och skadade det med {dmgtomonster}\n-------------")
+                                print(f"Du slängde din hand mot monstret och skadade det med {dmgtomonster}\n-------------")
                             time.sleep(1.2)
                         if drag == "i":
                             if len(spelare.INV) > 0:
