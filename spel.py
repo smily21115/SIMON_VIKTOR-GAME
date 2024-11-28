@@ -98,6 +98,7 @@ class Enemies:
     def __init__ (self):
         self.MHP = rand.randint(100,50000) + (spelare.LVL*5)
         self.MSTR = rand.randint(5,10) + (spelare.LVL*3)
+        #test för framtid funkar inte just nu
 
 class Items:
     def __init__(self,namn,beskriv,anvanda,STR_bonus,slitstyrk):
