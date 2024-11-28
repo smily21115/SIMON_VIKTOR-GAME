@@ -14,9 +14,7 @@ class Player:
         self.XP = XP
         self.MAXHP = MAXHP
         self.Gold = Gold
-        self.shop = []
-        
-
+        self.shop = ()
              
     def check_stats(self):
         print(f"---player stats---")
@@ -24,6 +22,7 @@ class Player:
         print(f"Strength {self.STR+equipped[0]}")
         print(f"Level {self.LVL}")
         print(f"{self.XP}XP / {self.get_next_level_xp()}XP")
+        print(f"You have {self.Gold} Gold")
     
     def gain_xp(self,amount):
       self.XP += amount
@@ -40,7 +39,7 @@ class Player:
 
     def get_next_level_xp(self):
         base_XP = 100
-        scaling = 1.25
+        scaling = 1.5
         return int(base_XP* (self.LVL**scaling))
 
     def level_up(self):
@@ -134,6 +133,7 @@ def durFunk(f1):
     elif f1.namn == "Unikt Svärd":
         dur = 15
     return dur
+
 def chestIn():
     if rand.randint(1,11) > 9:
         return True
@@ -231,6 +231,7 @@ def durSvard(dur):
     dur = dur-1
     return dur
 #Items
+
 
 rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,rand.randint(1,5),7)
 
@@ -339,7 +340,7 @@ while True:
                 print("Här fanns det inget")
             input(": ")
         elif invordoor == "s":
-            spelare.check_stats()  # Show player stats
+            spelare.check_stats()  
             input(": ")
         elif invordoor == "sh":
             spelare.open_shop()
