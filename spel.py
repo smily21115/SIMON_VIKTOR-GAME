@@ -14,15 +14,15 @@ class Player:
         self.XP = XP
         self.MAXHP = MAXHP
         self.Gold = Gold
-<<<<<<< HEAD
-#class traveling_merchant:
-    #def __init__(self,)
+        self.shop = ()
+             
     def check_stats(self):
         print(f"---player stats---")
         print(f"{self.HP}HP/{self.MAXHP}HP")
         print(f"Strength {self.STR+equipped[0]}")
         print(f"Level {self.LVL}")
         print(f"{self.XP}XP / {self.get_next_level_xp()}XP")
+        print(f"You have {self.Gold} Gold")
     
     def gain_xp(self,amount):
       self.XP += amount
@@ -44,52 +44,12 @@ class Player:
 
     def level_up(self):
         self.LVL += 1
-        self.MAXHP +=15   
-=======
-        self.shop = []
-        
-
-             
-    def check_stats(self):
-        print(f"---player stats---")
-        print(f"{self.HP}HP/{self.MAXHP}HP")
-        print(f"Strength {self.STR+equipped[0]}")
-        print(f"Level {self.LVL}")
-        print(f"{self.XP}XP / {self.get_next_level_xp()}XP")
-    
-    def gain_xp(self,amount):
-      self.XP += amount
-      print(f"\nYou gained {amount} XP! Current XP: {self.XP}/{self.get_next_level_xp()}")
-
-    def death(self):
-        if self.HP<=0:
-            print("you have now died restart the gane")
-            exit()
-
-    def gain_Gold(self,amount):
-        self.Gold += amount
-        print(f"\n You gained {amount} Gold you now have{self.Gold}")
-
-    def get_next_level_xp(self):
-        base_XP = 100
-        scaling = 1.25
-        return int(base_XP* (self.LVL**scaling))
-
-    def level_up(self):
-        self.LVL += 1
         self.MAXHP +=25   
->>>>>>> 7838def86a6bb02cdb3347a8ce160d77043b1d9e
         self.STR += 7  
         self.XP = 0  
         if self.LVL == 10:
             print("\nYou have reached level 10 and won the game! Congratulations!")
             exit()
-<<<<<<< HEAD
-        
-class Enemies:
-    def __init__ (self):
-        self.MHP = rand.randint(10,15) + (spelare.LVL*5)
-=======
             
     def open_shop(self):
         while True:
@@ -107,8 +67,10 @@ class Enemies:
                     str_increase = rand.randint(3, 8)  # Random boost
                     self.STR += str_increase
                     print(f"Your strength increased by {str_increase}! Current Strength: {self.STR}")
+                    input(":")
                 else:
                     print("You don't have enough Gold!")
+                    input(":")
             elif choice == "2":
                 if self.Gold >= 25:
                     self.Gold -= 25
@@ -117,28 +79,33 @@ class Enemies:
                     print(f"You healed {heal} HP! Current HP: {self.HP}/{self.MAXHP}")
                 else:
                     print("You don't have enough Gold!")
+                    input(":")
             elif choice == "3":
                 if self.Gold >= 50:
                     if len(self.INV_dur) > 0:
                         self.Gold -= 50
                         self.INV_dur[equipped[4]] += 3
                         print(f"Durability of {self.INV_namn[equipped[4]].namn} increased to {self.INV_dur[equipped[4]]}")
+                        input(":")
                     else:
                         print("You don't have any weapons to upgrade!")
+                        input(":")
                 else:
                     print("You don't have enough Gold!")
+                    input(":")
             elif choice == "4":
                 print("Exiting the shop...")
                 return
             else:
                 print("Invalid choice, please choose 1-4.")
+                input(":")
     
         
 class Enemies:
     def __init__ (self):
         self.MHP = rand.randint(100,50000) + (spelare.LVL*5)
->>>>>>> 7838def86a6bb02cdb3347a8ce160d77043b1d9e
         self.MSTR = rand.randint(5,10) + (spelare.LVL*3)
+        #test för framtid funkar inte just nu
 
 class Items:
     def __init__(self,namn,beskriv,anvanda,STR_bonus,slitstyrk):
@@ -174,6 +141,7 @@ def durFunk(f1):
     elif f1.namn == "Unikt Svärd":
         dur = 15
     return dur
+
 def chestIn():
     if rand.randint(1,11) > 9:
         return True
@@ -272,6 +240,7 @@ def durSvard(dur):
     return dur
 #Items
 
+
 rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,rand.randint(1,5),7)
 
 
@@ -306,11 +275,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-<<<<<<< HEAD
-spelare = Player(10,5,[],[],[],1,start_rum,0,10,0)
-=======
-spelare = Player(25,5,[],[],[],1,start_rum,0,10,0,())
->>>>>>> 7838def86a6bb02cdb3347a8ce160d77043b1d9e
+spelare = Player(25,5,[],[],[],1,start_rum,0,25,0,())
 
 #Enemies
 
@@ -349,11 +314,7 @@ while True:
     d2 = False
     d3 = False
     while d3 == False:
-<<<<<<< HEAD
-        invordoor = input("Vill du utforska ett rum, kolla ditt inventory eller kolla dina stats?(r/i/s): ")
-=======
         invordoor = input("Vill du utforska ett rum, kolla ditt inventory eller kolla dina stats eller köpa något från shop?(r/i/s/sh): ")
->>>>>>> 7838def86a6bb02cdb3347a8ce160d77043b1d9e
         if invordoor == "r":
             while d2 == False:
                 d = input("\nVilket av de tre rum vill du utforska?(a/w/d): ")
@@ -387,15 +348,12 @@ while True:
                 print("Här fanns det inget")
             input(": ")
         elif invordoor == "s":
-            spelare.check_stats()  # Show player stats
+            spelare.check_stats()  
             input(": ")
-<<<<<<< HEAD
-=======
         elif invordoor == "sh":
             spelare.open_shop()
             
             
->>>>>>> 7838def86a6bb02cdb3347a8ce160d77043b1d9e
 
     spelare.RUM = d  # Update the current room
 
@@ -433,7 +391,7 @@ while True:
                             print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
                             print(f"({value+1})")
                             print("\n-------------")
-                        bytaFunk(strengthbon,appendThing.namn,dur)
+                        bytaFunk(strengthbon,appendThing,dur)
                 input("\n:")
 
     if spelare.RUM == monster_rum:
@@ -508,7 +466,7 @@ while True:
             print("you have killed the monster")
             XP = rand.randint(10,25)
             spelare.XP += XP
-            Gold = rand.randint(7,17)
+            Gold = rand.randint(70,170)
             spelare.Gold += Gold
             print(f"\n You gained {Gold} Gold, you now have {spelare.Gold} Gold")
             print(f"\n ")
@@ -567,5 +525,5 @@ while True:
                             print(f'{spelare.INV_namn[value].namn} som har strength bonus {spelare.INV[value]}')
                             print(f"({value+1})")
                             print("\n-------------")
-                        bytaFunk(strengthbon,appendThing.namn,dur)
+                        bytaFunk(strengthbon,appendThing,dur)
                 input("\n:") 
