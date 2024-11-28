@@ -3,7 +3,7 @@ import time
 import json
 
 class Player:
-    def __init__(self,HP,STR,INV,INV_namn,INV_dur,LVL,RUM,XP,MAXHP,Gold):
+    def __init__(self,HP,STR,INV,INV_namn,INV_dur,LVL,RUM,XP,MAXHP,Gold,shop):
         self.HP = HP
         self.STR = STR
         self.INV = []
@@ -14,8 +14,10 @@ class Player:
         self.XP = XP
         self.MAXHP = MAXHP
         self.Gold = Gold
-#class traveling_merchant:
-    #def __init__(self,)
+        self.shop = []
+        
+
+             
     def check_stats(self):
         print(f"---player stats---")
         print(f"{self.HP}HP/{self.MAXHP}HP")
@@ -38,21 +40,64 @@ class Player:
 
     def get_next_level_xp(self):
         base_XP = 100
-        scaling = 1.5
+        scaling = 1.25
         return int(base_XP* (self.LVL**scaling))
 
     def level_up(self):
         self.LVL += 1
-        self.MAXHP +=15   
+        self.MAXHP +=25   
         self.STR += 7  
         self.XP = 0  
         if self.LVL == 10:
             print("\nYou have reached level 10 and won the game! Congratulations!")
             exit()
+            
+    def open_shop(self):
+        while True:
+            print("\n --welcome to the shop--")
+            print("1. Strength potion (150 Gold) - Increases your strength by an random ammount")
+            print("2. Health potion (25 GOld) - Increases your HP by a minimum 10 up to your max HP ")
+            print("3. Skill potion (50 Gold) - increases your wepons durabillity")
+            print("4. exit the shop")
+            
+            choice = input("Choose an option (1-4): ")
+            
+            if choice == "1":
+                if self.Gold >= 150:
+                    self.Gold -= 150
+                    str_increase = rand.randint(3, 8)  # Random boost
+                    self.STR += str_increase
+                    print(f"Your strength increased by {str_increase}! Current Strength: {self.STR}")
+                else:
+                    print("You don't have enough Gold!")
+            elif choice == "2":
+                if self.Gold >= 25:
+                    self.Gold -= 25
+                    heal = min(rand.randint(10, 25), self.MAXHP - self.HP)
+                    self.HP += heal
+                    print(f"You healed {heal} HP! Current HP: {self.HP}/{self.MAXHP}")
+                else:
+                    print("You don't have enough Gold!")
+            elif choice == "3":
+                if self.Gold >= 50:
+                    if len(self.INV_dur) > 0:
+                        self.Gold -= 50
+                        self.INV_dur[equipped[4]] += 3
+                        print(f"Durability of {self.INV_namn[equipped[4]].namn} increased to {self.INV_dur[equipped[4]]}")
+                    else:
+                        print("You don't have any weapons to upgrade!")
+                else:
+                    print("You don't have enough Gold!")
+            elif choice == "4":
+                print("Exiting the shop...")
+                return
+            else:
+                print("Invalid choice, please choose 1-4.")
+    
         
 class Enemies:
     def __init__ (self):
-        self.MHP = rand.randint(10,15) + (spelare.LVL*5)
+        self.MHP = rand.randint(100,50000) + (spelare.LVL*5)
         self.MSTR = rand.randint(5,10) + (spelare.LVL*3)
 
 class Items:
@@ -221,7 +266,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(10,5,[],[],[],1,start_rum,0,10,0)
+spelare = Player(25,5,[],[],[],1,start_rum,0,10,0,())
 
 #Enemies
 
@@ -260,7 +305,7 @@ while True:
     d2 = False
     d3 = False
     while d3 == False:
-        invordoor = input("Vill du utforska ett rum, kolla ditt inventory eller kolla dina stats?(r/i/s): ")
+        invordoor = input("Vill du utforska ett rum, kolla ditt inventory eller kolla dina stats eller köpa något från shop?(r/i/s/sh): ")
         if invordoor == "r":
             while d2 == False:
                 d = input("\nVilket av de tre rum vill du utforska?(a/w/d): ")
@@ -296,6 +341,10 @@ while True:
         elif invordoor == "s":
             spelare.check_stats()  # Show player stats
             input(": ")
+        elif invordoor == "sh":
+            spelare.open_shop()
+            
+            
 
     spelare.RUM = d  # Update the current room
 
@@ -468,4 +517,4 @@ while True:
                             print(f"({value+1})")
                             print("\n-------------")
                         bytaFunk(strengthbon,appendThing.namn,dur)
-                input("\n:")
+                input("\n:") 
