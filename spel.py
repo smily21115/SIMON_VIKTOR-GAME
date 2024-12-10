@@ -281,7 +281,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(25,5,[],[],[],8,start_rum,0,25,0,())
+spelare = Player(25,5,[],[],[],1,start_rum,0,25,0,())
 
 #Enemies
 
