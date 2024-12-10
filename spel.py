@@ -77,6 +77,7 @@ class Player:
                     heal = min(rand.randint(10, 25), self.MAXHP - self.HP)
                     self.HP += heal
                     print(f"You healed {heal} HP! Current HP: {self.HP}/{self.MAXHP}")
+                    input(":")
                 else:
                     print("You don't have enough Gold!")
                     input(":")
@@ -127,8 +128,10 @@ def STRBONUS(f1):
         bonus = rand.randint(1,5)
     elif f1.namn == "Svärd":
         bonus = rand.randint(5,10)
-    elif f1.namn == "Unikt Svärd":
+    elif f1.namn == "Damascus svärd":
         bonus = rand.randint(10,20)
+    elif f1.namn == "Gudomligt svärd":
+        bonus = rand.randint(25,35)
     else:
         bonus = 1
     return bonus
@@ -138,8 +141,10 @@ def durFunk(f1):
         dur = 7
     elif f1.namn == "Svärd":
         dur = 11
-    elif f1.namn == "Unikt Svärd":
-        dur = 15
+    elif f1.namn == "Damascus svärd":
+        dur = 16
+    elif f1.namn == "Gudomligt svärd":
+        dur = 12
     return dur
 
 def chestIn():
@@ -157,9 +162,10 @@ def chestItems(f3,f4):
     if i <= 3:
         return rostigt_svard
     elif i >= f4:
-        if spelare.LVL >= 3:
-            if rand.randint(1,2) == 1:
-                return damascus_svard
+        if (spelare.LVL >= 7) and (rand.randint(1,2) == 1):
+            return hephaestus_svard
+        if (spelare.LVL >= 3) and (rand.randint(1,2) == 1):
+            return damascus_svard
         else:
             return stal_svard
 
@@ -247,10 +253,10 @@ rostigt_svard = Items("Rostigt svärd","Rostigt och trubbigt",True,rand.randint(
 stal_svard = Items("Svärd","Dammigt men fint skick, perfekt mot monster",True,10,11)
 
 
-damascus_svard = Items("Unikt svärd","Svärd gjort av olika metaller som skapar ett fantastiskt mönster. Slitstyrkan är unikt",True,20,rand.randint(5,10))
+damascus_svard = Items("Damascus svärd","Svärd gjort av olika metaller som skapar ett fantastiskt mönster. Slitstyrkan är unikt",True,20,rand.randint(5,10))
 
 
-hephaestus_svard = Items("Unikt svärd","Glänser som om den smeds i samma stund som du hittade den. Är detta Guds gåva?",True,30,rand.randint(6,12))
+hephaestus_svard = Items("Gudomligt svärd","Glänser som om den smeds i samma stund som du hittade den. Är detta Guds gåva?",True,30,rand.randint(6,12))
 
 
 #Rum
@@ -275,7 +281,7 @@ mellanrum = Room("Mellan", "Kolla ditt inventory och hälsa, kanske en dryck som
 
 
 #Player
-spelare = Player(25,5,[],[],[],1,start_rum,0,25,0,())
+spelare = Player(25,5,[],[],[],8,start_rum,0,25,0,())
 
 #Enemies
 
@@ -464,7 +470,7 @@ while True:
                     
         if monsterdeadchest == True:
             print("you have killed the monster")
-            XP = rand.randint(10,25)
+            XP = rand.randint(30,45)
             spelare.XP += XP
             Gold = rand.randint(70,170)
             spelare.Gold += Gold
