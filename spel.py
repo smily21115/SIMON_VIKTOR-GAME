@@ -138,7 +138,7 @@ def STRBONUS(f1):
         
 def durFunk(f1):
     if f1.namn == "Rostigt svärd":
-        dur = 7
+        dur = 6
     elif f1.namn == "Svärd":
         dur = 11
     elif f1.namn == "Damascus svärd":
@@ -217,7 +217,7 @@ def equipFunk():
                 durequip = spelare.INV_dur[int(vapen)-1]
                 myInt = True
                 vapen = int(vapen)-1
-                vapen_list = [equip, equip_namn, True, durequip, vapen]
+                vapen_list = [equip, equip_namn, True, durequip, int(vapen)]
             else:
                 print("Skriv in vilket vapen du vill använda(står under namnet och bonusen)")
         else:
@@ -232,6 +232,8 @@ def bytaFunk(bon,namn,dura):
             if int(vapen) <= len(spelare.INV) and int(vapen) > 0:
                 byta = spelare.INV[int(vapen)-1]
                 spelare.INV.pop(int(vapen)-1)
+                spelare.INV_dur.pop(int(vapen)-1)
+                spelare.INV_namn.pop(int(vapen)-1)
                 spelare.INV.append(bon)
                 spelare.INV_namn.append(namn)  
                 spelare.INV_dur.append(dura)
@@ -435,6 +437,7 @@ while True:
                                 print(f"Du slängde ditt vapen mot monstret och skadade det med {dmgtomonster}\n-------------")
                                 if spelare.INV_dur[equipped[4]] < 1:
                                     print("Ditt svärd gick sönder")
+                                    equipped[2] = False
                                     spelare.INV.pop(equipped[4])
                                     spelare.INV_dur.pop(equipped[4])
                                     spelare.INV_namn.pop(equipped[4])
@@ -456,6 +459,7 @@ while True:
                                     print(f"Du använder nu {equipped[1]} som har strength bonus {equipped[0]}")
                             else:
                                 print("Här fanns det inget")
+                            input(": ")
                     if HPM > 0:
                         dmgtoplayer = dmgIntM()
                         spelare.HP = spelare.HP - dmgtoplayer
